@@ -1,0 +1,26 @@
+version: "3.3"
+
+services:
+  mlflow-server:
+    image: python:3.8
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlflow.db:/app/mlflow.db
+      - ./artifacts:/app/artifacts
+    command: sh -c "pip install mlflow && mlflow server --host 0.0.0.0 --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./artifacts"
+
+  training-job:
+    build: .
+    depends_on:
+      - mlflow-server
+    environment:
+      - MLFLOW_TRACKING_URI=http://localhost:5000
+
+#  predict-job:
+#    build: .
+#    depends_on:
+#      - mlflow-server
+#    environment:
+#      - MLFLOW_TRACKING_URI=http://localhost:5000
+#    command: python predict.py
