@@ -1,102 +1,102 @@
-# MLflow Tracking with Docker Compose
+# Отслеживание экспериментов с MLflow и Docker Compose
 
-This project demonstrates how to set up MLflow tracking server with Docker Compose for machine learning experiment tracking.
+Этот проект демонстрирует настройку сервера MLflow с использованием Docker Compose для отслеживания экспериментов машинного обучения.
 
-## Project Structure
+## Структура проекта
 
 ```
 .
-├── docker-compose.yml        # Docker Compose configuration
-├── train.py                  # Training script with MLflow tracking
-├── mlflow.db                 # SQLite database for MLflow (created after first run)
-├── artifacts/                # Directory for storing model artifacts
-└── README.md                 # This file
+├── docker-compose.yml        # Конфигурация Docker Compose
+├── train.py                  # Скрипт обучения с интеграцией MLflow
+├── mlflow.db                 # SQLite база данных для MLflow (создается при первом запуске)
+├── artifacts/                # Директория для хранения артефактов моделей
+└── README.md                 # Этот файл
 ```
 
-## Prerequisites
+## Требования
 
 - Docker
 - Docker Compose
 
-## Quick Start
+## Быстрый старт
 
-### 1. Start the MLflow Server and Training Job
+### 1. Запуск сервера MLflow и задачи обучения
 
-Run the following command to start both the MLflow tracking server and the training job:
+Выполните следующую команду для запуска сервера MLflow и задачи обучения:
 
 ```bash
 docker-compose up --build
 ```
 
-This will:
-1. Start the MLflow tracking server on port 5000
-2. Run the training job which will log experiments to the tracking server
+Это выполнит:
+1. Запуск сервера MLflow на порту 5000
+2. Запуск задачи обучения, которая будет логировать эксперименты на сервер
 
-### 2. Access the MLflow UI
+### 2. Доступ к веб-интерфейсу MLflow
 
-After starting the services, you can access the MLflow tracking UI at:
+После запуска сервисов вы можете получить доступ к веб-интерфейсу MLflow по адресу:
 
 ```
 http://localhost:5000
 ```
 
-In the UI you'll see:
-- The "Iris_Classification" experiment
-- The run with logged parameters and metrics
-- The trained model artifact
+В интерфейсе вы увидите:
+- Эксперимент "Iris_Classification"
+- Запуск с залогированными параметрами и метриками
+- Артефакт обученной модели
 
-## How It Works
+## Как это работает
 
-### MLflow Tracking Server
+### Сервер MLflow
 
-The MLflow server is configured with:
-- SQLite backend store (`mlflow.db`)
-- Local artifact storage (`./artifacts`)
-- Accessible at `http://localhost:5000`
+Сервер MLflow настроен с:
+- Бэкенд-хранилищем SQLite (`mlflow.db`)
+- Локальным хранилищем артефактов (`./artifacts`)
+- Доступен по адресу `http://localhost:5000`
 
-### Training Job
+### Задача обучения
 
-The training job:
-1. Loads the Iris dataset
-2. Trains a RandomForestClassifier
-3. Logs to MLflow:
-   - Parameters (n_estimators)
-   - Metrics (accuracy)
-   - Model artifact
+Задача обучения:
+1. Загружает набор данных Iris
+2. Обучает RandomForestClassifier
+3. Логирует в MLflow:
+   - Параметры (n_estimators)
+   - Метрики (accuracy)
+   - Артефакт модели
 
-## Customizing
+## Настройка
 
-### To run just the MLflow server:
+### Запуск только сервера MLflow:
 
 ```bash
 docker-compose up mlflow-server
 ```
 
-### To run just the training job (after MLflow server is running):
+### Запуск только задачи обучения (после запуска сервера):
 
 ```bash
 docker-compose up training-job
 ```
 
-## Troubleshooting
+## Решение проблем
 
-If you encounter connection issues:
-1. Make sure the MLflow server is running first
-2. Check that the training job is using the correct tracking URI (`http://mlflow-server:5000`)
+При возникновении проблем с подключением:
+1. Убедитесь, что сервер MLflow запущен
+2. Проверьте, что задача обучения использует правильный URI (`http://mlflow-server:5000`)
 
-## Cleaning Up
+## Очистка
 
-To stop and remove all containers:
+Для остановки и удаления всех контейнеров:
 
 ```bash
 docker-compose down
 ```
 
-To also remove the database and artifacts:
+Для удаления базы данных и артефактов:
 
 ```bash
 docker-compose down -v
 rm -rf artifacts/ mlflow.db
 ```
 
-> **Note:** The `docker-compose.yml` file uses a Python image to run MLflow server for simplicity. In production, you might want to use an official MLflow Docker image or build a custom image.
+> **Примечание:** Файл `docker-compose.yml` использует образ Python для запуска сервера MLflow для простоты. В продакшене рекомендуется использовать официальный образ MLflow Docker или собрать собственный образ.
